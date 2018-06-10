@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/DefaultLayout}"
+>
+
+<head>
+    <title>Portifolio</title>
+</head>
+
+<section layout:fragment="content" id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-10">
+                    <h1>Portifólios</h1>
+                </div>
+
+                <div class="col-2">
+                    <div class="">
+                        <a class="btn btn-primary" th:href="@{/portifolio/new}"><span class="d-none d-md-block">Novo portifólio</span><i class="fas fa-plus d-lg-none d-xl-none"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Meta</th>
+                </tr>
+            </thead>
+
+            <tr th:each="portifolio : ${portifolios}">
+                <td th:text="${portifolio.nome}">...</td>
+                <td th:text="${portifolio.meta}">...</td>
+            </tr>
+
+            <tr th:if="${portifolios.empty}">
+                <td>Nenhum portifólio encontrado</td>
+            </tr>
+        </table>
+    </div>
+</section>
+</html>
+<!-- /.container -->

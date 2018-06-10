@@ -1,0 +1,19 @@
+Portfolio
+	-meta: String				//Meta do portfolio
+	-criterios: String List		//Criterios deste portfolio
+	-matComp: Double matriz		//Matriz de comparacao
+	-vetTotal: Double			//Vetor total
+	-vetEigen: Double			//Vetor de Eigen
+	-ci: Double					//Indice de inconsistencia
+	-ri: Double					//Indice aleatorio de inconsistencia
+	-cr: Double					//Taxa de inconsistencia
+inserirCriterio();
+removerCriterio();
+compararCriterios();
+normalizar();
+verificarInconsistencia();
+
+
+Criterio
+	-nome: String
+setNome();
