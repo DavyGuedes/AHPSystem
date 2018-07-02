@@ -101,9 +101,7 @@ html{
 }
 
 main section {
-    width: auto;
-    max-width: 680px;
-    padding: 0 15px;
+    padding: 60px 15px 0;
 }
 
 main section{

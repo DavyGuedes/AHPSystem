@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <body>
 <!-- Navigation -->
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark" th:fragment="navbar">
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary" th:fragment="navbar">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/portfolio}">AHPSystem</a>
+        <a class="navbar-brand" th:href="@{/}">AHPSystem</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -21,12 +19,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPortfolio" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
-                        Portfolio
+                        Serviços
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
                         <a class="dropdown-item" th:href="@{/portfolio}">Portfolios</a>
-                        <a class="dropdown-item" th:href="@{/atividade}">Atividades</a>
-                        <a class="dropdown-item" th:href="@{/criterio}">Criterios</a>
+                        <a class="dropdown-item" th:href="@{#}">Criterios</a>
+                        <a class="dropdown-item" th:href="@{#}">Atividades</a>
                     </div>
                 </li>
             </ul>

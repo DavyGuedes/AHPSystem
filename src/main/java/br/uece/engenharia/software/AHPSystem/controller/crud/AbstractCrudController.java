@@ -1,33 +1,32 @@
 package br.uece.engenharia.software.AHPSystem.controller.crud;
 
-import br.uece.engenharia.software.AHPSystem.model.Atividade;
 import br.uece.engenharia.software.AHPSystem.utils.Consts;
-import com.fasterxml.classmate.GenericType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.GenericTypeResolver;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
 
 @Controller
-@RequestMapping("/")
 public abstract class AbstractCrudController<Entity, ID extends Serializable> {
 
     @Autowired
     protected JpaRepository<Entity, ID> repository;
+
+    private final String urlRequestMapping;
+
+
+    protected AbstractCrudController(String urlRequestMapping) {
+        this.urlRequestMapping = urlRequestMapping;
+    }
 
     @GetMapping
     public ModelAndView listAll(ModelAndView modelAndView){
@@ -51,6 +50,7 @@ public abstract class AbstractCrudController<Entity, ID extends Serializable> {
     public ModelAndView processNew(ModelAndView modelAndView, @Valid @ModelAttribute("entity") Entity entity, BindingResult result, RedirectAttributes redirectAttributes) {
         // verifica se a error de validacao
         if (result.hasErrors()) {
+//            System.out.println(result.getAllErrors());
             // existem erros,
             // entao redireciona novamente para o formulario,
             // adicionando novamente o objeto na view
@@ -61,7 +61,7 @@ public abstract class AbstractCrudController<Entity, ID extends Serializable> {
             return modelAndView;
         }
         this.repository.save(entity);
-        modelAndView.setViewName("redirect:/" + getViewPathByAction(""));
+        modelAndView.setViewName("redirect:" + urlRequestMapping);
         return modelAndView;
     }
 
@@ -69,7 +69,7 @@ public abstract class AbstractCrudController<Entity, ID extends Serializable> {
     public ModelAndView find(ModelAndView modelAndView, @PathVariable ID id) {
         Optional<Entity> entity = repository.findById(id);
         if (!entity.isPresent()) {
-            modelAndView.setViewName("redirect:/" + getViewPathByAction(""));
+            modelAndView.setViewName("redirect:" + urlRequestMapping);
         }
         modelAndView.addObject("entity", entity);
         modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
@@ -81,7 +81,7 @@ public abstract class AbstractCrudController<Entity, ID extends Serializable> {
         Optional<Entity> entity = repository.findById(id);
         if (entity.isPresent())
             repository.delete(entity.get());
-        modelAndView.setViewName("redirect:/" + getViewPathByAction(""));
+        modelAndView.setViewName("redirect:" + urlRequestMapping);
         return modelAndView;
 
     }
