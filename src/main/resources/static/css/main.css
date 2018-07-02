@@ -100,10 +100,6 @@ html{
     overflow-y:scroll;
 }
 
-body {
-    /*padding-top: 50px;*/
-}
-
 main section {
     width: auto;
     max-width: 680px;
@@ -115,16 +111,19 @@ main section{
     padding-bottom: 50px;
 }
 
-
-
-#action-buttons{
-    white-space: nowrap
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    background-color: #efefef;
+    flex: 0 0 50px;/*or just height:50px;*/
+    margin-top: auto;
+}
+#action-buttons{
+    white-space: nowrap
 }
 
 
