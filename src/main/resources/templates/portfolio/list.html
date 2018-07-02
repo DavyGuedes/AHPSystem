@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/DefaultLayout}">
+
+<head>
+    <title>Portfolio</title>
+</head>
+
+<section layout:fragment="content">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-10">
+                <h1>Portifólios</h1>
+            </div>
+
+            <div class="col-2">
+                <a class="btn btn-primary" th:href="@{/portfolio/novo}"><span
+                        class="d-none d-md-block">Novo portifólio</span><i class="fas fa-plus d-lg-none d-xl-none"></i></a>
+
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <!--/*@thymesVar id="entities" type="java.util.List"*/-->
+        <div th:if="${#lists.isEmpty(entities)}">
+            <p>Nenhum portfólio encontrado</p>
+            <hr>
+        </div>
+        <div th:if="${!#lists.isEmpty(entities)}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col" width="8px">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Meta</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tr th:each="portfolio : ${entities}">
+                    <!--/*@thymesVar id="portfolio" type="br.uece.engenharia.software.AHPSystem.model.Portfolio"*/-->
+                    <td>
+                        <a class="btn-outline-primary btn btn-sm" th:text="${portfolio.id}"
+                           th:href="@{'/portfolio/' + ${portfolio.id}}">...</a>
+                    </td>
+                    <td th:text="${portfolio.nome}">...</td>
+                    <td th:text="${portfolio.meta}">...</td>
+                    <td id="action-buttons">
+                    <span class="float-right">
+                        <a class="btn btn-sm btn-outline-primary"
+                           th:href="@{'/portfolio/' + ${portfolio.id} }">
+                            <i class="fas fa-pen-square"></i> Editar
+                        </a>
+                        <a class="btn btn-sm btn-outline-primary"
+                           th:href="@{'/portfolio/' + ${portfolio.id} + '/remover'}">
+                            <i class="fas fa-trash-alt"></i> Remover
+                        </a>
+                    </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>
+</html>

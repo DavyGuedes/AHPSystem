@@ -26,9 +26,9 @@ Run the project with:
 
 > mvnw clean spring-boot:run
 
-+ open your browser at <localhost:8080/portifolio>
++ open your browser at <localhost:8080/portfolio>
 
-+ Online demo <http://ahpsystem.herokuapp.com/portifolio>
++ Online demo <http://ahpsystem.herokuapp.com/portfolio>
 
 ## TODO
 

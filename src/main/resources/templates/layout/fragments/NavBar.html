@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+>
 
 <body>
 <!-- Navigation -->
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top" th:fragment="navbar">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark" th:fragment="navbar">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/portifolio}">AHPSystem</a>
+        <a class="navbar-brand" th:href="@{/portfolio}">AHPSystem</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -24,7 +24,7 @@
                         Portfolio
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPortfolio">
-                        <a class="dropdown-item" th:href="@{/portifolio}">Portifolios</a>
+                        <a class="dropdown-item" th:href="@{/portfolio}">Portfolios</a>
                         <a class="dropdown-item" th:href="@{/atividade}">Atividades</a>
                         <a class="dropdown-item" th:href="@{/criterio}">Criterios</a>
                     </div>

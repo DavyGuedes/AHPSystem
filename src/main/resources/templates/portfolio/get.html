@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout/DefaultLayout}"
+>
+
+<head>
+    <title>Portfolio</title>
+</head>
+
+<section layout:fragment="content">
+    <!--/*@thymesVar id="entity" type="br.uece.engenharia.software.AHPSystem.model.Portfolio"*/-->
+        <fieldset>
+            <h1>Portfólio</h1>
+            <input type="hidden" name="id" th:field="*{id}">
+            <div class="form-group"
+                 th:attrappend="class=${#fields.hasErrors('nome') ? ' has-danger' : ' '}">
+                <label class="form-control-label" for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" placeholder="Digite o nome" readonly
+                       th:field="*{nome}"
+                       th:attrappend="class=${#fields.hasErrors('nome') ? ' is-invalid' : ' '}">
+                <small class="form-text text-muted">Identificação do portifólio.</small>
+                <div class="invalid-feedback" th:errors="*{nome}"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-control-label" for="meta">Meta</label>
+                <input type="text" class="form-control" id="meta" placeholder="Digite a meta" readonly
+                       th:field="*{meta}"
+                       th:attrappend="class=${#fields.hasErrors('meta') ? ' is-invalid' : ' '}">
+                <small id="metaHelp" class="form-text text-muted">Meta para o portifólio.</small>
+                <div th:errors="*{meta}" class="invalid-feedback"></div>
+            </div>
+
+        </fieldset>
+</section>
+</html>
