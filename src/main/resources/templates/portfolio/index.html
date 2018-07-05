@@ -74,7 +74,7 @@
 
                     <div class="table-responsive">
                         <!--/*@thymesVar id="atividades" type="java.util.List"*/-->
-                        <div>
+                        <div th:if="${#lists.isEmpty(atividades)}">
                             <p>Sem atividades cadastradas</p>
                         </div>
                         <div>
@@ -135,8 +135,8 @@
                     </div>
 
                     <div class="table-responsive">
-                        <!--/*@thymesVar id="atividades" type="java.util.List"*/-->
-                        <div>
+                        <!--/*@thymesVar id="criterios" type="java.util.List"*/-->
+                        <div th:if="${#lists.isEmpty(criterios)}">
                             <p>Sem critérios cadastradas</p>
                         </div>
                         <div>
@@ -149,7 +149,7 @@
                                 </tr>
                                 </thead>
                                 <tr th:each="criterio : ${critierios}">
-                                    <!--/*@thymesVar id="atividade" type="br.uece.engenharia.software.AHPSystem.model.Atividade"*/-->
+                                    <!--/*@thymesVar id="criterio" type="br.uece.engenharia.software.AHPSystem.model.Criterio"*/-->
                                     <td>
                                         <a class="btn-outline-primary btn btn-sm" th:text="${atividade.id}"
                                            th:href="@{'/criterio/' + ${criterio.id}}">...</a>
