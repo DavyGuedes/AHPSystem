@@ -12,7 +12,7 @@
     <!--/*@thymesVar id="entity" type="br.uece.engenharia.software.AHPSystem.model.Portfolio"*/-->
     <form action="#" th:action="@{/portfolio/novo}" th:object="${entity}" method="post">
         <fieldset>
-            <h1>Portfólio</h1>
+            <h2>Portfólio</h2>
             <input type="hidden" name="id" th:field="*{id}">
             <div class="form-group"
                  th:attrappend="class=${#fields.hasErrors('nome') ? ' has-danger' : ' '}">

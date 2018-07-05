@@ -5,19 +5,19 @@
       layout:decorate="~{layout/DefaultLayout}">
 
 <head>
-    <title>Portfolio</title>
+    <title>Atividades</title>
 </head>
 
 <section layout:fragment="content">
     <div class="page-header">
         <div class="row">
             <div class="col-10">
-                <h2>Portifólios</h2>
+                <h2>Atividades</h2>
             </div>
 
             <div class="col-2">
-                <a class="btn btn-primary" th:href="@{/portfolio/novo}"><span
-                        class="d-none d-md-block">Novo portifólio</span><i class="fas fa-plus d-lg-none d-xl-none"></i></a>
+                <a class="btn btn-primary" th:href="@{/atividade/novo}"><span
+                        class="d-none d-md-block">Novo atividade</span><i class="fas fa-plus d-lg-none d-xl-none"></i></a>
 
             </div>
         </div>
@@ -25,7 +25,7 @@
     <div class="table-responsive">
         <!--/*@thymesVar id="entities" type="java.util.List"*/-->
         <div th:if="${#lists.isEmpty(entities)}">
-            <p>Nenhum portfólio encontrado</p>
+            <p>Nenhum registro encontrado</p>
             <hr>
         </div>
         <div th:if="${!#lists.isEmpty(entities)}">
@@ -34,26 +34,32 @@
                 <tr>
                     <th scope="col" width="8px">#</th>
                     <th scope="col">Nome</th>
-                    <th scope="col">Meta</th>
+                    <th scope="col">Descricao</th>
+                    <th scope="col">Portfólio</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
-                <tr th:each="portfolio : ${entities}">
-                    <!--/*@thymesVar id="portfolio" type="br.uece.engenharia.software.AHPSystem.model.Portfolio"*/-->
+                <tr th:each="atividade : ${entities}">
+                    <!--/*@thymesVar id="atividade" type="br.uece.engenharia.software.AHPSystem.model.Atividade"*/-->
                     <td>
-                        <a class="btn-outline-primary btn btn-sm" th:text="${portfolio.id}"
-                           th:href="@{'/portfolio/' + ${portfolio.id}}">...</a>
+                        <a class="btn-outline-primary btn btn-sm" th:text="${atividade.id}"
+                           th:href="@{'/atividade/' + ${atividade.id}}">...</a>
                     </td>
-                    <td th:text="${portfolio.nome}">...</td>
-                    <td th:text="${portfolio.meta}">...</td>
+                    <td th:text="${atividade.nome}">...</td>
+                    <td th:text="${atividade.descricao}">...</td>
+                    <td >
+                        <a class="btn btn-outline-primary"
+                                th:href="@{'/portfolio/' + ${atividade.portfolio.id}}"
+                                th:text="${atividade.portfolio.nome}"></a>
+                    </td>
                     <td id="action-buttons">
                     <span class="float-right">
                         <a class="btn btn-sm btn-outline-primary"
-                           th:href="@{'/portfolio/' + ${portfolio.id} } + '/edit'">
+                           th:href="@{'/atividade/' + ${atividade.id} + '/edit' }">
                             <i class="fas fa-pen-square"></i> Editar
                         </a>
                         <a class="btn btn-sm btn-outline-primary"
-                           th:href="@{'/portfolio/' + ${portfolio.id} + '/remover'}">
+                           th:href="@{'/atividade/' + ${atividade.id} + '/remover'}">
                             <i class="fas fa-trash-alt"></i> Remover
                         </a>
                     </span>

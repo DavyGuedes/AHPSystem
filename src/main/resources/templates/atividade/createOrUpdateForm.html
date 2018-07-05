@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout/DefaultLayout}">
+
+<head>
+    <title>Atividades</title>
+</head>
+
+<section layout:fragment="content">
+    <!--/*@thymesVar id="entity" type="br.uece.engenharia.software.AHPSystem.model.Atividade"*/-->
+    <form action="#" th:action="@{/atividade/novo}" th:object="${entity}" method="post">
+        <fieldset>
+            <h2>Atividades</h2>
+            <input type="hidden" name="id" th:field="*{id}">
+            <div class="form-group"
+                 th:attrappend="class=${#fields.hasErrors('nome') ? ' has-danger' : ' '}">
+                <label class="form-control-label" for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" placeholder="Digite o nome"
+                       th:field="*{nome}"
+                       th:attrappend="class=${#fields.hasErrors('nome') ? ' is-invalid' : ' '}">
+                <small class="form-text text-muted">Identificação do portifólio.</small>
+                <div class="invalid-feedback" th:errors="*{nome}"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-control-label" for="descricao">Descrição</label>
+                <input type="text" class="form-control" id="descricao" placeholder="Digite a descrição"
+                       th:field="*{descricao}"
+                       th:attrappend="class=${#fields.hasErrors('descricao') ? ' is-invalid' : ' '}">
+                <small id="descricaoHelp" class="form-text text-muted">Meta para o portifólio.</small>
+                <div th:errors="*{descricao}" class="invalid-feedback"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-control-label" for="portfolio">Portfolio</label>
+                <select th:field="*{portfolio}" class="custom-select">
+                    <!--/*@thymesVar id="portfolios" type="java.util.List"*/-->
+                    <!--/*@thymesVar id="item" type="br.uece.engenharia.software.AHPSystem.model.Portfolio"*/-->
+                    <option id="portfolio" th:each="item : ${portfolios}" th:value="${item.id}" th:text="${item.getNome()}">
+                        Select
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Registrar</button>
+        </fieldset>
+    </form>
+</section>
+</html>

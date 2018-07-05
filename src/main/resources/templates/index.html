@@ -27,11 +27,11 @@
 
             <div class="col-lg-4">
 
-                <h1>AHP System</h1>
-
-                <p>O sistema realiza a  aplicação do modelo matemático Analytic Hierarchy Process (AHP) para priorização de seleção ou para identificação de projetos/atividades de maior importância para um portfólio. A aplicação do sistema permite ao usuário fazer análises multicritério dos projetos/atividades em um portifólio que permitam tomada de decisões, favorecendo e oritendo a realização de seus objetivos. O sistema independe de outros sistemas. </p>
-
-                <a class="btn btn-primary btn-lg" href="#">Veja em ação!</a>
+                <h2>AHP System</h2>
+                <hr>
+                <p style="text-align: justify">O sistema realiza a  aplicação do modelo matemático Analytic Hierarchy Process (AHP) para priorização de seleção ou para identificação de projetos/atividades de maior importância para um portfólio. A aplicação do sistema permite ao usuário fazer análises multicritério dos projetos/atividades em um portifólio que permitam tomada de decisões, favorecendo e oritendo a realização de seus objetivos. O sistema independe de outros sistemas. </p>
+                <hr>
+                <a class="btn btn-primary btn-lg" href="#portfoliosCard">Veja em ação!</a>
 
             </div>
 
@@ -43,12 +43,12 @@
 
 
         <!-- Call to Action Well -->
-
         <div class="card text-white bg-secondary my-4 text-center">
 
             <div class="card-body">
 
-                <p class="text-white m-0">O sistema permite o cadastro de portfólio, critérios e atividades para a realização do Analytic Hierarchy Process (AHP) de suas atividades para um dado portfólio. Os resultados poderão ser vistos por meios vizuais e um relatório dos resultados em uma planilha editável poderá ser gerado</p>
+                <p class="text-white m-0">O sistema permite o cadastro de portfólio, critérios e atividades para a realização do Analytic Hierarchy Process (AHP) de suas atividades para um dado portfólio.</p>
+                            <p>Os resultados poderão ser vistos por meios vizuais e um relatório dos resultados em uma planilha editável poderá ser gerado</p>
 
             </div>
 
@@ -56,24 +56,24 @@
 
 
         <!-- Content Row -->
-
+        <hr>
         <div class="row">
 
             <div class="col-md-4 mb-4">
 
                 <div class="card h-100">
 
-                    <div class="card-body">
+                    <div class="card-body" id="portfoliosCard">
 
                         <h2 class="card-title">Portfolios</h2>
 
-                        <p class="card-text">O portfólio é uma coleção de todo o trabalho em andamento na organização relacionado com o alcance dos objetivos do negócio.</p>
+                        <p class="card-text" style="text-align: justify">Um Portfólio é uma coleção de todo o trabalho em andamento na organização relacionado com o alcance dos objetivos do negócio.</p>
 
                     </div>
 
                     <div class="card-footer">
 
-                        <a href="#" th:href="@{/portfolio}" class="btn btn-primary">Acesse</a>
+                        <a href="#" th:href="@{/portfolio}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Página de portfólios">Acesse</a>
 
                     </div>
 
@@ -89,17 +89,15 @@
 
                     <div class="card-body">
 
-                        <h2 class="card-title">Card Two</h2>
+                        <h2 class="card-title">Atividades</h2>
 
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod tenetur ex
-                            natus at dolorem enim! Nesciunt pariatur voluptatem sunt quam eaque, vel, non in id dolore
-                            voluptates quos eligendi labore.</p>
+                        <p class="card-text" style="text-align: justify">Gerencie e cadastre atividades. <br>Acesso através da página de portfólios.</p>
 
                     </div>
 
                     <div class="card-footer">
 
-                        <a href="#" class="btn btn-primary">More Info</a>
+                        <a href="#" class="btn btn-primary" th:href="@{portoflios/}" data-toggle="tooltip" data-placement="top" title="Acesso através da página de portfólios.">Acesse</a>
 
                     </div>
 
@@ -115,16 +113,15 @@
 
                     <div class="card-body">
 
-                        <h2 class="card-title">Card Three</h2>
+                        <h2 class="card-title">Critérios</h2>
 
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex
-                            numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                        <p class="card-text" style="text-align: justify">Gerencie e cadastre critérios para análise AHP posterior na página de portfólios.</p>
 
                     </div>
 
                     <div class="card-footer">
 
-                        <a href="#" class="btn btn-primary">More Info</a>
+                        <a href="#" th:href="@{/criterio}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Página de crítérios.">Acesse</a>
 
                     </div>
 
@@ -133,15 +130,20 @@
             </div>
 
             <!-- /.col-md-4 -->
-
 
         </div>
-
+        <hr>
         <!-- /.row -->
+
 
 
     </div>
 
     <!-- /.container -->
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 </section>
 </html>

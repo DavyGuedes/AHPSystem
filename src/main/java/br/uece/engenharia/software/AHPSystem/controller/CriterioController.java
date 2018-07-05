@@ -1,36 +1,30 @@
-package br.uece.engenharia.software.AHPSystem.controller.crud;
+package br.uece.engenharia.software.AHPSystem.controller;
 
+import br.uece.engenharia.software.AHPSystem.model.Criterio;
+import br.uece.engenharia.software.AHPSystem.repository.CriterioRepository;
 import br.uece.engenharia.software.AHPSystem.utils.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-
 @Controller
-public abstract class AbstractCrudController<Entity, ID extends Serializable> {
+@RequestMapping(CriterioController.urlRequestMapping)
+public class CriterioController {
+
+    static final String urlRequestMapping = "/criterio";
 
     @Autowired
-    protected JpaRepository<Entity, ID> repository;
-
-    private final String urlRequestMapping;
-
-
-    protected AbstractCrudController(String urlRequestMapping) {
-        this.urlRequestMapping = urlRequestMapping;
-    }
+    protected CriterioRepository repository;
 
     @GetMapping
     public ModelAndView listAll(ModelAndView modelAndView){
-        List<Entity> entities = repository.findAll();
+        List<Criterio> entities = repository.findAll();
         modelAndView.addObject("entities", entities);
         modelAndView.setViewName(getViewPathByAction(Consts.viewList));
         return modelAndView;
@@ -39,7 +33,7 @@ public abstract class AbstractCrudController<Entity, ID extends Serializable> {
     @GetMapping("/novo")
     public ModelAndView formNew(ModelAndView modelAndView) {
         // adiciona na view (tela) uma instancia do objeto para o formulario
-        modelAndView.addObject("entity", getEntity());
+        modelAndView.addObject("entity", getCriterio());
         modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
         return modelAndView;
     }
@@ -47,7 +41,7 @@ public abstract class AbstractCrudController<Entity, ID extends Serializable> {
     @PostMapping("/novo")
     // Metodo que intercepta o caminho '/novo' da url (metodo HTTP POST)
     // para submissao do formulario a ser processado
-    public ModelAndView processNew(ModelAndView modelAndView, @Valid @ModelAttribute("entity") Entity entity, BindingResult result, RedirectAttributes redirectAttributes) {
+    public ModelAndView processNew(ModelAndView modelAndView, @Valid @ModelAttribute("entity") Criterio entity, BindingResult result) {
         // verifica se a error de validacao
         if (result.hasErrors()) {
 //            System.out.println(result.getAllErrors());
@@ -66,8 +60,8 @@ public abstract class AbstractCrudController<Entity, ID extends Serializable> {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView find(ModelAndView modelAndView, @PathVariable ID id) {
-        Optional<Entity> entity = repository.findById(id);
+    public ModelAndView find(ModelAndView modelAndView, @PathVariable Long id) {
+        Optional<Criterio> entity = repository.findById(id);
         if (!entity.isPresent()) {
             modelAndView.setViewName("redirect:" + urlRequestMapping);
         }
@@ -77,8 +71,8 @@ public abstract class AbstractCrudController<Entity, ID extends Serializable> {
     }
 
     @GetMapping("/{id}/remover")
-    public ModelAndView remove(ModelAndView modelAndView, @PathVariable ID id) {
-        Optional<Entity> entity = repository.findById(id);
+    public ModelAndView remove(ModelAndView modelAndView, @PathVariable Long id) {
+        Optional<Criterio> entity = repository.findById(id);
         if (entity.isPresent())
             repository.delete(entity.get());
         modelAndView.setViewName("redirect:" + urlRequestMapping);
@@ -86,7 +80,11 @@ public abstract class AbstractCrudController<Entity, ID extends Serializable> {
 
     }
 
-    protected  abstract String getViewPathByAction(String action);
+    protected String getViewPathByAction(String action) {
+        return "criterio/" + action;
+    }
 
-    protected abstract Entity getEntity();
+    protected Criterio getCriterio() {
+        return new Criterio();
+    }
 }

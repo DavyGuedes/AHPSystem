@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/")
-public class PageController {
+public class IndexController {
     @GetMapping
     public ModelAndView paginaInicial(ModelAndView modelAndView){
         modelAndView.setViewName("index");
