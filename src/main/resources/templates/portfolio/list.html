@@ -9,6 +9,9 @@
 </head>
 
 <section layout:fragment="content">
+
+    <th:block th:include="fragments/MensagemErro"></th:block>
+
     <div class="page-header">
         <div class="row">
             <div class="col-10">
@@ -22,13 +25,14 @@
             </div>
         </div>
     </div>
+
     <div class="table-responsive">
-        <!--/*@thymesVar id="entities" type="java.util.List"*/-->
-        <div th:if="${#lists.isEmpty(entities)}">
+        <!--/*@thymesVar id="portfolios" type="java.util.List"*/-->
+        <div th:if="${#lists.isEmpty(portfolios)}">
             <p>Nenhum portfólio encontrado</p>
             <hr>
         </div>
-        <div th:if="${!#lists.isEmpty(entities)}">
+        <div th:if="${!#lists.isEmpty(portfolios)}">
             <table class="table">
                 <thead>
                 <tr>
@@ -38,10 +42,12 @@
                     <th scope="col"></th>
                 </tr>
                 </thead>
-                <tr th:each="portfolio : ${entities}">
+                <tr th:each="portfolio : ${portfolios}">
                     <!--/*@thymesVar id="portfolio" type="br.uece.engenharia.software.AHPSystem.model.Portfolio"*/-->
                     <td>
-                        <a class="btn-outline-primary btn btn-sm" th:text="${portfolio.id}"
+                        <a class="btn-outline-primary btn btn-sm"
+                           data-toggle="tooltip" data-placement="top" title="Acesse o portfólio"
+                           th:text="${portfolio.id}"
                            th:href="@{'/portfolio/' + ${portfolio.id}}">...</a>
                     </td>
                     <td th:text="${portfolio.nome}">...</td>

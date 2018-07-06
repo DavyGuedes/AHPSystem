@@ -1,14 +1,16 @@
 package br.uece.engenharia.software.AHPSystem.controller;
 
 import br.uece.engenharia.software.AHPSystem.model.Atividade;
-import br.uece.engenharia.software.AHPSystem.repository.AtividadeRepository;
-import br.uece.engenharia.software.AHPSystem.repository.PortfolioRepository;
+import br.uece.engenharia.software.AHPSystem.model.Portfolio;
+import br.uece.engenharia.software.AHPSystem.service.AtividadeService;
+import br.uece.engenharia.software.AHPSystem.service.PortfolioService;
 import br.uece.engenharia.software.AHPSystem.utils.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,66 +23,70 @@ public class AtividadeController {
     static final String urlRequestMapping = "/atividade";
 
     @Autowired
-    private AtividadeRepository atividadeRepository;
+    AtividadeService atividadeService;
+
     @Autowired
-    private PortfolioRepository portfolioRepository;
+    PortfolioService portfolioService;
 
     @GetMapping
-    public ModelAndView listAll(ModelAndView modelAndView){
-        List<Atividade> entities = atividadeRepository.findAll();
-        modelAndView.addObject("entities", entities);
+    public ModelAndView listAll(ModelAndView modelAndView, RedirectAttributes attributes) {
+        List<Atividade> atividades = atividadeService.findAll();
+        List<Portfolio> portfolios = portfolioService.findAll();
+        if (portfolios.isEmpty()){
+            attributes.addFlashAttribute("mensagem", "Primeiro crie um Portfólio para depois criar uma atividade");
+            modelAndView.setViewName("redirect:" + PortfolioController.urlRequestMapping + "/novo");
+            return modelAndView;
+        }
+        modelAndView.addObject("atividades", atividades);
         modelAndView.setViewName(getViewPathByAction(Consts.viewList));
         return modelAndView;
     }
 
     @GetMapping("/novo")
-    public ModelAndView formNew(ModelAndView modelAndView) {
-        // adiciona na view (tela) uma instancia do objeto para o formulario
-        modelAndView.addObject("entity", getAtividade());
-        modelAndView.addObject("portfolios", portfolioRepository.findAll());
+    public ModelAndView formNew(ModelAndView modelAndView, RedirectAttributes attributes) {
+        modelAndView.addObject("atividade", getAtividade());
+        List<Portfolio> portfolios = portfolioService.findAll();
+        if (portfolios.isEmpty()){
+            attributes.addFlashAttribute("mensagem", "Primeiro crie um Portfólio para depois criar uma atividade");
+            modelAndView.setViewName("redirect:" + PortfolioController.urlRequestMapping + "/novo");
+            return modelAndView;
+        }
+        modelAndView.addObject("portfolios", portfolioService.findAll());
         modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
         return modelAndView;
     }
 
     @PostMapping("/novo")
-    // Metodo que intercepta o caminho '/novo' da url (metodo HTTP POST)
-    // para submissao do formulario a ser processado
-    public ModelAndView processNew(ModelAndView modelAndView, @Valid @ModelAttribute("entity") Atividade entity, BindingResult result) {
-        // verifica se a error de validacao
+    public ModelAndView processNew(ModelAndView modelAndView, @Valid @ModelAttribute("atividade") Atividade atividade, BindingResult result) {
         if (result.hasErrors()) {
-            System.out.println(result.getAllErrors());
-            // existem erros,
-            // entao redireciona novamente para o formulario,
-            // adicionando novamente o objeto na view
-            // (caso não adicione, os dados anteriormente inseridos sao perdidos,
-            // pois nao haveria relacao com seus atributos e os campos da view (tela)
-            modelAndView.addObject("entity", entity);
-            modelAndView.addObject("portfolios", portfolioRepository.findAll());
+            modelAndView.addObject("atividade", atividade);
+            modelAndView.addObject("portfolios", portfolioService.findAll());
             modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
             return modelAndView;
         }
-        this.atividadeRepository.save(entity);
+        this.atividadeService.save(atividade);
         modelAndView.setViewName("redirect:" + urlRequestMapping);
         return modelAndView;
     }
 
     @GetMapping("/{id}")
     public ModelAndView find(ModelAndView modelAndView, @PathVariable Long id) {
-        Optional<Atividade> entity = atividadeRepository.findById(id);
-        if (!entity.isPresent()) {
+        Optional<Atividade> atividade = atividadeService.findById(id);
+        if (!atividade.isPresent()) {
             modelAndView.setViewName("redirect:" + urlRequestMapping);
+            return modelAndView;
         }
-        modelAndView.addObject("entity", entity);
-        modelAndView.addObject("portfolios", portfolioRepository.findAll());
+        modelAndView.addObject("atividade", atividade);
+        modelAndView.addObject("portfolios", portfolioService.findAll());
         modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
         return modelAndView;
     }
 
     @GetMapping("/{id}/remover")
     public ModelAndView remove(ModelAndView modelAndView, @PathVariable Long id) {
-        Optional<Atividade> entity = atividadeRepository.findById(id);
+        Optional<Atividade> entity = atividadeService.findById(id);
         if (entity.isPresent())
-            atividadeRepository.delete(entity.get());
+            atividadeService.delete(entity.get());
         modelAndView.setViewName("redirect:" + urlRequestMapping);
         return modelAndView;
 

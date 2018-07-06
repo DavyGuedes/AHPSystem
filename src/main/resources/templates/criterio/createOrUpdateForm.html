@@ -9,10 +9,21 @@
 </head>
 
 <section layout:fragment="content">
-    <!--/*@thymesVar id="entity" type="br.uece.engenharia.software.AHPSystem.model.Criterio"*/-->
-    <form action="#" th:action="@{/criterio/novo}" th:object="${entity}" method="post">
+
+    <th:block th:include="fragments/MensagemErro"></th:block>
+
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <h1>Critério</h1>
+                <p class="lead">Cadastrar critério</p>
+            </div>
+        </div>
+    </div>
+
+    <!--/*@thymesVar id="criterio" type="br.uece.engenharia.software.AHPSystem.model.Criterio"*/-->
+    <form action="#" th:action="@{/criterio/novo}" th:object="${criterio}" method="post">
         <fieldset>
-            <h2>Critério</h2>
             <input type="hidden" name="id" th:field="*{id}">
             <div class="form-group"
                  th:attrappend="class=${#fields.hasErrors('nome') ? ' has-danger' : ' '}">
@@ -22,6 +33,26 @@
                        th:attrappend="class=${#fields.hasErrors('nome') ? ' is-invalid' : ' '}">
                 <small class="form-text text-muted">Identificação do portifólio.</small>
                 <div class="invalid-feedback" th:errors="*{nome}"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-control-label">Portfolio</label>
+
+                <!--<select th:field="*{portfolios}" class="form-control" id="chkveg" multiple="multiple">-->
+                    <!--&lt;!&ndash;/*@thymesVar id="portfolios" type="java.util.List"*/&ndash;&gt;-->
+                    <!--&lt;!&ndash;/*@thymesVar id="item" type="br.uece.engenharia.software.AHPSystem.model.Portfolio"*/&ndash;&gt;-->
+                    <!--<option th:each="item : ${portfolios}"-->
+                            <!--th:value="${item.id}"-->
+                            <!--th:text="${item.getNome()}"-->
+                    <!--&gt;-->
+                    <!--</option>-->
+                <!--</select>-->
+                <select th:field="*{portfolios}" size="10" id="chkveg" multiple="multiple">
+                    <option th:each="item : ${allPortfolios}"
+                            th:value="${{item}}"
+                            th:text="${item.getNome()}">
+                        Cinema
+                    </option>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Cadastrar</button>
         </fieldset>

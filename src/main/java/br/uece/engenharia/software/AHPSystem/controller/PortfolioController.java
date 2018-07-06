@@ -6,6 +6,9 @@ import br.uece.engenharia.software.AHPSystem.model.Portfolio;
 import br.uece.engenharia.software.AHPSystem.repository.AtividadeRepository;
 import br.uece.engenharia.software.AHPSystem.repository.CriterioRepository;
 import br.uece.engenharia.software.AHPSystem.repository.PortfolioRepository;
+import br.uece.engenharia.software.AHPSystem.service.AtividadeService;
+import br.uece.engenharia.software.AHPSystem.service.CriterioService;
+import br.uece.engenharia.software.AHPSystem.service.PortfolioService;
 import br.uece.engenharia.software.AHPSystem.utils.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Controller
 @RequestMapping(PortfolioController.urlRequestMapping)
@@ -25,66 +27,59 @@ public class PortfolioController{
     static final String urlRequestMapping = "/portfolio";
 
     @Autowired
-    CriterioRepository criterioRepository;
+    CriterioService criterioService;
     @Autowired
-    AtividadeRepository atividadeRepository;
+    AtividadeService atividadeService;
     @Autowired
-    PortfolioRepository portfolioRepository;
+    PortfolioService portfolioService;
 
 
     @GetMapping
     public ModelAndView listAll(ModelAndView modelAndView){
-        List<Portfolio> entities = portfolioRepository.findAll();
-        modelAndView.addObject("entities", entities);
+        List<Portfolio> portfolios = portfolioService.findAll();
+        modelAndView.addObject("portfolios", portfolios);
         modelAndView.setViewName(getViewPathByAction(Consts.viewList));
         return modelAndView;
     }
 
     @GetMapping("/novo")
     public ModelAndView formNew(ModelAndView modelAndView) {
-        // adiciona na view (tela) uma instancia do objeto para o formulario
-        modelAndView.addObject("entity", getPortfolio());
+        modelAndView.addObject("portfolio", getPortfolio());
+        modelAndView.addObject("allCriterios", criterioService.findAll());
         modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
         return modelAndView;
     }
 
     @PostMapping("/novo")
-    // Metodo que intercepta o caminho '/novo' da url (metodo HTTP POST)
-    // para submissao do formulario a ser processado
-    public ModelAndView processNew(ModelAndView modelAndView, @Valid @ModelAttribute("entity") Portfolio entity, BindingResult result) {
-        // verifica se a error de validacao
+    public ModelAndView processNew(ModelAndView modelAndView, @Valid @ModelAttribute("portfolio") Portfolio portfolio, BindingResult result) {
         if (result.hasErrors()) {
-//            System.out.println(result.getAllErrors());
-            // existem erros,
-            // entao redireciona novamente para o formulario,
-            // adicionando novamente o objeto na view
-            // (caso não adicione, os dados anteriormente inseridos sao perdidos,
-            // pois nao haveria relacao com seus atributos e os campos da view (tela)
-            modelAndView.addObject("entity", entity);
+            modelAndView.addObject("portfolio", portfolio);
+            modelAndView.addObject("allCriterios", criterioService.findAll());
             modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
             return modelAndView;
         }
-        this.portfolioRepository.save(entity);
+        this.portfolioService.save(portfolio);
         modelAndView.setViewName("redirect:" + urlRequestMapping);
         return modelAndView;
     }
 
     @GetMapping("/{id}/edit")
     public ModelAndView edit(ModelAndView modelAndView, @PathVariable Long id) {
-        Optional<Portfolio> entity = portfolioRepository.findById(id);
-        if (!entity.isPresent()) {
+        Optional<Portfolio> portfolio = portfolioService.findById(id);
+        if (!portfolio.isPresent()) {
             modelAndView.setViewName("redirect:" + urlRequestMapping);
         }
-        modelAndView.addObject("entity", entity);
+        modelAndView.addObject("portfolio", portfolio);
+        modelAndView.addObject("allCriterios", criterioService.findAll());
         modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
         return modelAndView;
     }
 
     @GetMapping("/{id}/remover")
     public ModelAndView remove(ModelAndView modelAndView, @PathVariable Long id) {
-        Optional<Portfolio> entity = portfolioRepository.findById(id);
-        if (entity.isPresent())
-            portfolioRepository.delete(entity.get());
+        Optional<Portfolio> portfolio = portfolioService.findById(id);
+        if (portfolio.isPresent())
+            portfolioService.delete(portfolio.get());
         modelAndView.setViewName("redirect:" + urlRequestMapping);
         return modelAndView;
 
@@ -96,64 +91,73 @@ public class PortfolioController{
 
     @GetMapping("/{id}")
     public ModelAndView find(ModelAndView modelAndView, @PathVariable("id") Long id){
-        Portfolio portfolio = portfolioRepository.findById(id).get();
-        addPortfolioData(modelAndView, portfolio);
-        modelAndView.addObject("atividadeBlank", new Atividade());
-        modelAndView.addObject("criterioBlank", new Criterio());
+        Portfolio portfolio = portfolioService.findById(id).get();
+
+        fillData(modelAndView, portfolio);
+
+        modelAndView.addObject("atividade", new Atividade());
+        modelAndView.addObject("criterio", new Criterio());
         modelAndView.setViewName(getViewPathByAction("index"));
         return modelAndView;
     }
 
-    @PostMapping("/{id}/atividade")
-    public ModelAndView processAtividadeForm(ModelAndView modelAndView, @PathVariable("id") Long id, @Valid @ModelAttribute ("atividadeBlank") Atividade atividade, BindingResult result){
-        Portfolio portfolio = portfolioRepository.findById(id).get();
-
-        addPortfolioData(modelAndView, portfolio);
-        modelAndView.addObject("atividadeBlank", atividade);
-        if(result.hasErrors()){
-            System.out.println(result.getAllErrors());
-            modelAndView.setViewName(getViewPathByAction("index"));
-        } else {
-            atividade.setPortfolio(portfolio);
-            atividadeRepository.save(atividade);
-
-            portfolio.getAtividades().add(atividade);
-            portfolioRepository.save(portfolio);
-
-            modelAndView.setViewName("redirect:/portfolio/"+ portfolio.getId());
-        }
-        return modelAndView;
-    }
-
-    @PostMapping("/{id}/criterio")
-    public ModelAndView processCriterioForm(ModelAndView modelAndView, @PathVariable("id") Long id, @Valid @ModelAttribute ("criterioBlank") Criterio criterio, BindingResult result){
-        Portfolio portfolio = portfolioRepository.findById(id).get();
-         addPortfolioData(modelAndView, portfolio);
-
-        if(result.hasErrors()){
-            modelAndView.setViewName(getViewPathByAction("index"));
-            return modelAndView;
-        } else {
-            criterio.getPortfolios().add(portfolio);
-            criterioRepository.save(criterio);
-
-            portfolio.getCriterios().add(criterio);
-            portfolioRepository.save(portfolio);
-
-            modelAndView.setViewName("redirect:/portfolio/"+ portfolio.getId());
-        }
-        return modelAndView;
-    }
 
     protected String getViewPathByAction(String action) {
         return "portfolio/" + action;
     }
 
-    private void addPortfolioData(ModelAndView modelAndView, Portfolio portfolio) {
-        modelAndView.addObject("entity", portfolio);
+    @PostMapping("/{id}/criterio")
+    public ModelAndView processCriterioForm(ModelAndView modelAndView, @PathVariable("id") Long id, @Valid @ModelAttribute ("criterio") Criterio criterio, BindingResult result){
+        Portfolio portfolio = portfolioService.findById(id).get();
+
+        if(result.hasErrors()){
+            fillData(modelAndView, portfolio);
+
+            modelAndView.addObject("atividade", new Atividade());
+            modelAndView.addObject("criterio", criterio);
+
+            modelAndView.setViewName(getViewPathByAction("index"));
+            return modelAndView;
+        } else {
+            criterio.getPortfolios().add(portfolio);
+            criterioService.save(criterio);
+
+            portfolio.getCriterios().add(criterio);
+            portfolioService.save(portfolio);
+
+            modelAndView.setViewName("redirect:/portfolio/"+ portfolio.getId());
+        }
+        return modelAndView;
+    }
+
+    private void fillData(ModelAndView modelAndView, Portfolio portfolio) {
+        modelAndView.addObject("portfolio", portfolio);
         modelAndView.addObject("atividades", portfolio.getAtividades());
-        System.out.println("atividades: " + portfolio.getAtividades().size());
-        System.out.println("criterios: " + portfolio.getCriterios().size());
         modelAndView.addObject("criterios", portfolio.getCriterios());
+        modelAndView.addObject("allCriterios", criterioService.findAll());
+    }
+
+    @PostMapping("/{id}/atividade")
+    public ModelAndView processAtividadeForm(ModelAndView modelAndView, @PathVariable("id") Long id, @Valid @ModelAttribute ("atividade") Atividade atividade, BindingResult result){
+        Portfolio portfolio = portfolioService.findById(id).get();
+
+        if(result.hasErrors()){
+            fillData(modelAndView, portfolio);
+
+            modelAndView.addObject("atividade", atividade);
+            modelAndView.addObject("criterio", new Criterio());
+
+            modelAndView.setViewName(getViewPathByAction("index"));
+            return modelAndView;
+        } else {
+            atividade.setPortfolio(portfolio);
+            atividadeService.save(atividade);
+
+            portfolio.getAtividades().add(atividade);
+            portfolioService.save(portfolio);
+
+            modelAndView.setViewName("redirect:/portfolio/"+ portfolio.getId());
+        }
+        return modelAndView;
     }
 }

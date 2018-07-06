@@ -1,7 +1,6 @@
 package br.uece.engenharia.software.AHPSystem.model;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,7 +8,17 @@ import java.util.Set;
 public class Criterio extends BaseEntity {
     private String nome;
     private String descricao;
-    @ManyToMany(mappedBy = "criterios")
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "Portfolio_Criterio",
+        joinColumns = {
+            @JoinColumn(name = "portfolio_id", referencedColumnName = "id")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "criterio_id",referencedColumnName = "id")
+        }
+    )
     private Set<Portfolio> portfolios = new HashSet<>();
 
     public Criterio() {

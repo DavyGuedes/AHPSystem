@@ -16,16 +16,7 @@ public class Portfolio extends BaseEntity {
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL)
     private Set<Atividade> atividades = new HashSet<>();
 
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "Portfolio_Criterio",
-            joinColumns = {
-                @JoinColumn(name = "portfolio_id", referencedColumnName = "id")
-            },
-            inverseJoinColumns = {
-                @JoinColumn(name = "criterio_id",referencedColumnName = "id")
-            }
-    )
+    @ManyToMany(mappedBy = "portfolios")
     private Set<Criterio> criterios = new HashSet<>();
 
     public Portfolio() {

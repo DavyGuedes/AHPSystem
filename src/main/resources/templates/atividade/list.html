@@ -9,6 +9,9 @@
 </head>
 
 <section layout:fragment="content">
+
+    <th:block th:include="fragments/MensagemErro"></th:block>
+
     <div class="page-header">
         <div class="row">
             <div class="col-10">
@@ -22,13 +25,14 @@
             </div>
         </div>
     </div>
+
     <div class="table-responsive">
-        <!--/*@thymesVar id="entities" type="java.util.List"*/-->
-        <div th:if="${#lists.isEmpty(entities)}">
+        <!--/*@thymesVar id="atividades" type="java.util.List"*/-->
+        <div th:if="${#lists.isEmpty(atividades)}">
             <p>Nenhum registro encontrado</p>
             <hr>
         </div>
-        <div th:if="${!#lists.isEmpty(entities)}">
+        <div th:if="${!#lists.isEmpty(atividades)}">
             <table class="table">
                 <thead>
                 <tr>
@@ -39,10 +43,12 @@
                     <th scope="col"></th>
                 </tr>
                 </thead>
-                <tr th:each="atividade : ${entities}">
+                <tr th:each="atividade : ${atividades}">
                     <!--/*@thymesVar id="atividade" type="br.uece.engenharia.software.AHPSystem.model.Atividade"*/-->
                     <td>
-                        <a class="btn-outline-primary btn btn-sm" th:text="${atividade.id}"
+                        <a class="btn-outline-primary btn btn-sm"
+                           data-toggle="tooltip" data-placement="top" title="Acesse a atividade"
+                           th:text="${atividade.id}"
                            th:href="@{'/atividade/' + ${atividade.id}}">...</a>
                     </td>
                     <td th:text="${atividade.nome}">...</td>

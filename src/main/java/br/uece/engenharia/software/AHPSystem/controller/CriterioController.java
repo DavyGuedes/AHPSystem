@@ -1,13 +1,17 @@
 package br.uece.engenharia.software.AHPSystem.controller;
 
+import br.uece.engenharia.software.AHPSystem.model.Atividade;
 import br.uece.engenharia.software.AHPSystem.model.Criterio;
-import br.uece.engenharia.software.AHPSystem.repository.CriterioRepository;
+import br.uece.engenharia.software.AHPSystem.model.Portfolio;
+import br.uece.engenharia.software.AHPSystem.service.CriterioService;
+import br.uece.engenharia.software.AHPSystem.service.PortfolioService;
 import br.uece.engenharia.software.AHPSystem.utils.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,61 +24,70 @@ public class CriterioController {
     static final String urlRequestMapping = "/criterio";
 
     @Autowired
-    protected CriterioRepository repository;
+    protected CriterioService criterioService;
+
+    @Autowired
+    protected PortfolioService portfolioService;
 
     @GetMapping
-    public ModelAndView listAll(ModelAndView modelAndView){
-        List<Criterio> entities = repository.findAll();
-        modelAndView.addObject("entities", entities);
+    public ModelAndView listAll(ModelAndView modelAndView, RedirectAttributes attributes){
+        List<Criterio> criterios= criterioService.findAll();
+        List<Portfolio> allPortfolios = portfolioService.findAll();
+        /*if (allPortfolios.isEmpty()){
+            attributes.addFlashAttribute("mensagem", "Primeiro crie um Portfólio para depois criar uma atividade");
+            modelAndView.setViewName("redirect:" + PortfolioController.urlRequestMapping + "/novo");
+            return modelAndView;
+        }*/
+        modelAndView.addObject("criterios", criterios);
+        modelAndView.addObject("allPortfolios", allPortfolios);
         modelAndView.setViewName(getViewPathByAction(Consts.viewList));
         return modelAndView;
     }
 
     @GetMapping("/novo")
     public ModelAndView formNew(ModelAndView modelAndView) {
-        // adiciona na view (tela) uma instancia do objeto para o formulario
-        modelAndView.addObject("entity", getCriterio());
+        modelAndView.addObject("criterio", getCriterio());
+        modelAndView.addObject("allPortfolios", portfolioService.findAll());
         modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
         return modelAndView;
     }
 
     @PostMapping("/novo")
-    // Metodo que intercepta o caminho '/novo' da url (metodo HTTP POST)
-    // para submissao do formulario a ser processado
-    public ModelAndView processNew(ModelAndView modelAndView, @Valid @ModelAttribute("entity") Criterio entity, BindingResult result) {
-        // verifica se a error de validacao
+    public ModelAndView processNew(ModelAndView modelAndView, @Valid @ModelAttribute("criterio") Criterio criterio, BindingResult result) {
+        List<Portfolio> allPortfolios = portfolioService.findAll();
         if (result.hasErrors()) {
-//            System.out.println(result.getAllErrors());
-            // existem erros,
-            // entao redireciona novamente para o formulario,
-            // adicionando novamente o objeto na view
-            // (caso não adicione, os dados anteriormente inseridos sao perdidos,
-            // pois nao haveria relacao com seus atributos e os campos da view (tela)
-            modelAndView.addObject("entity", entity);
+            modelAndView.addObject("criterio", criterio);
+            modelAndView.addObject("allPortfolios", allPortfolios);
             modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
             return modelAndView;
         }
-        this.repository.save(entity);
+
+        for(Portfolio portfolio : criterio.getPortfolios()){
+
+        }
+        this.criterioService.save(criterio);
         modelAndView.setViewName("redirect:" + urlRequestMapping);
         return modelAndView;
     }
 
     @GetMapping("/{id}")
     public ModelAndView find(ModelAndView modelAndView, @PathVariable Long id) {
-        Optional<Criterio> entity = repository.findById(id);
-        if (!entity.isPresent()) {
+        Optional<Criterio> criterio = criterioService.findById(id);
+        modelAndView.addObject("allPortfolios", portfolioService.findAll());
+        if (!criterio.isPresent()) {
             modelAndView.setViewName("redirect:" + urlRequestMapping);
+            return modelAndView;
         }
-        modelAndView.addObject("entity", entity);
+        modelAndView.addObject("criterio", criterio);
         modelAndView.setViewName(getViewPathByAction(Consts.viewCreateOrUpdateForm));
         return modelAndView;
     }
 
     @GetMapping("/{id}/remover")
     public ModelAndView remove(ModelAndView modelAndView, @PathVariable Long id) {
-        Optional<Criterio> entity = repository.findById(id);
+        Optional<Criterio> entity = criterioService.findById(id);
         if (entity.isPresent())
-            repository.delete(entity.get());
+            criterioService.delete(entity.get());
         modelAndView.setViewName("redirect:" + urlRequestMapping);
         return modelAndView;
 
@@ -87,4 +100,5 @@ public class CriterioController {
     protected Criterio getCriterio() {
         return new Criterio();
     }
+
 }

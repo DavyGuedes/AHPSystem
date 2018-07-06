@@ -9,6 +9,9 @@
 </head>
 
 <section layout:fragment="content">
+
+    <th:block th:include="fragments/MensagemErro"></th:block>
+
     <div class="page-header">
         <div class="row">
             <div class="col-10">
@@ -22,13 +25,14 @@
             </div>
         </div>
     </div>
+
     <div class="table-responsive">
-        <!--/*@thymesVar id="entities" type="java.util.List"*/-->
-        <div th:if="${#lists.isEmpty(entities)}">
+        <!--/*@thymesVar id="criterios" type="java.util.List"*/-->
+        <div th:if="${#lists.isEmpty(criterios)}">
             <p>Nenhum registro encontrado</p>
             <hr>
         </div>
-        <div th:if="${!#lists.isEmpty(entities)}">
+        <div th:if="${!#lists.isEmpty(criterios)}">
             <table class="table">
                 <thead>
                 <tr>
@@ -37,7 +41,7 @@
                     <th scope="col"></th>
                 </tr>
                 </thead>
-                <tr th:each="criterio : ${entities}">
+                <tr th:each="criterio : ${criterios}">
                     <!--/*@thymesVar id="criterio" type="br.uece.engenharia.software.AHPSystem.model.Criterio"*/-->
                     <td>
                         <a class="btn-outline-primary btn btn-sm" th:text="${criterio.id}"
