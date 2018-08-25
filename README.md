@@ -18,7 +18,7 @@
 
 Clone the repository:
 
-> git clone https://github.com/MarcosDavy/AHPSystem
+> git clone https://github.com/DavyGuedes/AHPSystem
 
 > cd AHPSystem
 
